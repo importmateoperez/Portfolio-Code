@@ -5,7 +5,7 @@ resource "azurerm_resource_group" "rg" {
 
 # Create virtual network
 resource "rg_prod_vm_lab" "Prod_VNET" {
-  name                = "${random_pet.prefix.id}-vnet"
+  name                = "${random_pet.prefix.id}-Prod-Vnet"
   address_space       = ["10.1.0.0/16"]
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
