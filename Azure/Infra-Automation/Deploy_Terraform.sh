@@ -1,12 +1,25 @@
-# Initialize Terraform
-terraform init
+#!/bin/bash
 
-# Format and Validate
-terraform fmt      
+# Fix Windows line endings in this script automatically
+sed -i 's/\r$//' "$0"
+
+# Ensure the latest Terraform in ~/bin is used first
+export PATH="$HOME/bin:$PATH"
+
+# Remove old state metadata to prevent "ghost" errors
+echo "Cleaning up old metadata..."
+rm -rf .terraform/providers
+
+# Terraform Workflow
+echo "Starting Terraform Build..."
+
+terraform init
+terraform fmt
 terraform validate
 
-# Create a Plan
+# Create the Plan 
+echo "Generating Deployment Plan..."
 terraform plan -out=main.tfplan
 
-# Apply the file
-#terraform apply main.tfplan
+# To actually deploy, uncomment the line below
+# terraform apply main.tfplan -auto-approve
