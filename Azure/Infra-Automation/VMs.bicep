@@ -6,19 +6,7 @@ param adminUsername string
 @secure()
 param adminPassword string
 
-@description('Unique DNS Name for the Public IP used to access the Virtual Machine.')
-param dnsLabelPrefix string = toLower('${vmName}-${uniqueString(resourceGroup().id, vmName)}')
-
-@description('Name for the Public IP used to access the Virtual Machine.')
-param publicIpName string = 'Pip_Vm_Prod_Eus_001'
-
-@description('Allocation method for the Public IP used to access the Virtual Machine.')
-param publicIPAllocationMethod string = 'Static'
-
-@description('SKU for the Public IP used to access the Virtual Machine.')
-param publicIpSku string = 'Standard'
-
-@description('The Windows version for the VM. This will pick a fully patched image of this given Windows version.')
+@description('The Windows version for the VM.')
 @allowed([
   '2016-datacenter-gensecond'
   '2016-datacenter-server-core-g2'
@@ -30,7 +18,7 @@ param publicIpSku string = 'Standard'
 ])
 param OSVersion string = '2022-datacenter-azure-edition'
 
-@description('Size of the virtual machines for cost-effectiveness and policy compliance.')
+@description('Size of the virtual machines.')
 @allowed([
   'Standard_B1s'
   'Standard_B2pts_v2'
@@ -58,6 +46,7 @@ var subnetName = 'Subnet_A'
 var subnetPrefix = '10.1.0.0/24'
 var virtualNetworkName = 'Prod_VNET'
 var networkSecurityGroupName = 'Prod_NSG'
+
 var securityProfileJson = {
   uefiSettings: {
     secureBootEnabled: true
@@ -65,11 +54,6 @@ var securityProfileJson = {
   }
   securityType: securityType
 }
-var extensionName = 'GuestAttestation'
-var extensionPublisher = 'Microsoft.Azure.Security.WindowsAttestation'
-var extensionVersion = '1.0'
-var maaTenantName = 'GuestAttestation'
-var maaEndpoint = substring('emptyString', 0, 0)
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   name: storageAccountName
@@ -80,23 +64,37 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-05-01' = {
   kind: 'Storage'
 }
 
-resource publicIp 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
-  name: publicIpName
+resource bastionPublicIp 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
+  name: 'pip-bastion'
   location: location
   sku: {
-    name: publicIpSku
+    name: 'Standard'
   }
   properties: {
-    publicIPAllocationMethod: publicIPAllocationMethod
-    dnsSettings: {
-      domainNameLabel: dnsLabelPrefix
-    }
+    publicIPAllocationMethod: 'Static'
   }
 }
 
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-05-01' = {
   name: networkSecurityGroupName
   location: location
+  properties: {
+    securityRules: [
+      {
+        name: 'AllowBastionInbound'
+        properties: {
+          priority: 100
+          protocol: 'Tcp'
+          access: 'Allow'
+          direction: 'Inbound'
+          sourceAddressPrefix: '10.1.1.0/26'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+          destinationPortRange: '3389'
+        }
+      }
+    ]
+  }
 }
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-05-01' = {
@@ -128,6 +126,26 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-05-01' = {
   }
 }
 
+resource bastionHost 'Microsoft.Network/bastionHosts@2022-05-01' = {
+  name: 'BastionService'
+  location: location
+  properties: {
+    ipConfigurations: [
+      {
+        name: 'IpConf'
+        properties: {
+          subnet: {
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, 'AzureBastionSubnet')
+          }
+          publicIPAddress: {
+            id: bastionPublicIp.id
+          }
+        }
+      }
+    ]
+  }
+}
+
 resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = {
   name: nicName
   location: location
@@ -137,9 +155,6 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = {
         name: 'ipconfig1'
         properties: {
           privateIPAllocationMethod: 'Dynamic'
-          publicIPAddress: {
-            id: publicIp.id
-          }
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, subnetName)
           }
@@ -148,7 +163,6 @@ resource nic 'Microsoft.Network/networkInterfaces@2022-05-01' = {
     ]
   }
   dependsOn: [
-
     virtualNetwork
   ]
 }
@@ -178,13 +192,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
           storageAccountType: 'StandardSSD_LRS'
         }
       }
-      dataDisks: [
-        {
-          diskSizeGB: 30
-          lun: 0
-          createOption: 'Empty'
-        }
-      ]
     }
     networkProfile: {
       networkInterfaces: [
@@ -193,33 +200,6 @@ resource vm 'Microsoft.Compute/virtualMachines@2022-03-01' = {
         }
       ]
     }
-    diagnosticsProfile: {
-      bootDiagnostics: {
-        enabled: true
-        storageUri: storageAccount.properties.primaryEndpoints.blob
-      }
-    }
     securityProfile: ((securityType == 'TrustedLaunch') ? securityProfileJson : null)
-  }
-}
-
-resource vmExtension 'Microsoft.Compute/virtualMachines/extensions@2022-03-01' = if ((securityType == 'TrustedLaunch') && ((securityProfileJson.uefiSettings.secureBootEnabled == true) && (securityProfileJson.uefiSettings.vTpmEnabled == true))) {
-  parent: vm
-  name: extensionName
-  location: location
-  properties: {
-    publisher: extensionPublisher
-    type: extensionName
-    typeHandlerVersion: extensionVersion
-    autoUpgradeMinorVersion: true
-    enableAutomaticUpgrade: true
-    settings: {
-      AttestationConfig: {
-        MaaSettings: {
-          maaEndpoint: maaEndpoint
-          maaTenantName: maaTenantName
-        }
-      }
-    }
   }
 }
