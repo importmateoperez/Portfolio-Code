@@ -1,3 +1,9 @@
+# This block generates the random "pet name"
+resource "random_pet" "prefix" {
+  prefix = var.prefix
+  length = 1
+}
+
 # Resource Group
 resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
