@@ -12,7 +12,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-# Subnet
+# Subnet for the VM
 resource "azurerm_subnet" "subnet" {
   name                 = "internal-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
@@ -20,41 +20,39 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.1.1.0/24"]
 }
 
-# Public IP
-resource "azurerm_public_ip" "pip" {
-  name                = "${random_pet.prefix.id}-public-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
+# Dedicated Subnet for Azure Bastion
+resource "azurerm_subnet" "bastion_subnet" {
+  name                 = "AzureBastionSubnet"
+  resource_group_name  = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.1.2.0/26"] 
 }
 
-# Network Security Group
-resource "azurerm_network_security_group" "nsg" {
-  name                = "${random_pet.prefix.id}-nsg"
+# Public IP for Azure Bastion
+resource "azurerm_public_ip" "bastion_pip" {
+  name                = "bastion-pip"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  security_rule {
-    name                       = "HTTP"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+# Azure Bastion Host
+resource "azurerm_bastion_host" "bastion" {
+  name                = "Prod-Bastion"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+
+  ip_configuration {
+    name                 = "configuration"
+    subnet_id            = azurerm_subnet.bastion_subnet.id
+    public_ip_address_id = azurerm_public_ip.bastion_pip.id
   }
 }
 
-# Associate NSG to Subnet
-resource "azurerm_subnet_network_security_group_association" "subnet_assoc" {
-  subnet_id                 = azurerm_subnet.subnet.id
-  network_security_group_id = azurerm_network_security_group.nsg.id
-}
-
-# Network Interface
+# Network Interface 
 resource "azurerm_network_interface" "nic" {
-  name                = "${random_pet.prefix.id}-nic"
+  name                = "prod-vm-nic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
 
@@ -62,28 +60,18 @@ resource "azurerm_network_interface" "nic" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
   }
-}
-
-# Storage Account for Boot Diagnostics
-resource "azurerm_storage_account" "storage" {
-  name                     = "diag${random_id.random_id.hex}"
-  location                 = azurerm_resource_group.rg.location
-  resource_group_name      = azurerm_resource_group.rg.name
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
 }
 
 # Windows Virtual Machine
 resource "azurerm_windows_virtual_machine" "vm" {
-  name                  = "${var.prefix}-vm"
-  admin_username        = "azureuser"
+  name                  = "Prod-VM"
+  admin_username        = "adminuser"
   admin_password        = random_password.password.result
   location              = azurerm_resource_group.rg.location
   resource_group_name   = azurerm_resource_group.rg.name
   network_interface_ids = [azurerm_network_interface.nic.id]
-  size                  = "Standard_B1s"
+  size                  = "Standard_B2ats_v2" 
 
   os_disk {
     name                 = "osdisk-prod"
@@ -97,33 +85,9 @@ resource "azurerm_windows_virtual_machine" "vm" {
     sku       = "2022-datacenter-azure-edition"
     version   = "latest"
   }
-
-  boot_diagnostics {
-    storage_account_uri = azurerm_storage_account.storage.primary_blob_endpoint
-  }
 }
 
-# IIS Extension
-resource "azurerm_virtual_machine_extension" "iis" {
-  name                       = "wsi"
-  virtual_machine_id         = azurerm_windows_virtual_machine.vm.id
-  publisher                  = "Microsoft.Compute"
-  type                       = "CustomScriptExtension"
-  type_handler_version       = "1.8"
-  auto_upgrade_minor_version = true
-
-  settings = <<SETTINGS
-    {
-      "commandToExecute": "powershell -ExecutionPolicy Unrestricted Install-WindowsFeature -Name Web-Server -IncludeAllSubFeature -IncludeManagementTools"
-    }
-SETTINGS
-}
-
-resource "random_id" "random_id" {
-  keepers     = { resource_group = azurerm_resource_group.rg.name }
-  byte_length = 8
-}
-
+# Generates a random password for the VM
 resource "random_password" "password" {
   length      = 20
   min_lower   = 1
@@ -131,9 +95,4 @@ resource "random_password" "password" {
   min_numeric = 1
   min_special = 1
   special     = true
-}
-
-resource "random_pet" "prefix" {
-  prefix = var.prefix
-  length = 1
 }

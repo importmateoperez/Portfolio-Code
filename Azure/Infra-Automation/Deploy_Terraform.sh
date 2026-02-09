@@ -11,4 +11,4 @@ terraform validate
 terraform plan -out=main.tfplan
 
 # Apply the file
-terraform apply main.tfplan
+#terraform apply main.tfplan

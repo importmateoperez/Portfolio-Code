@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Create the Resource Group first
-az group create --name rg_prod_vm_lab --location westus3
+az group create --name rg_prod_vm_lab --location northcentralus
 
 
 # Test Deployment
