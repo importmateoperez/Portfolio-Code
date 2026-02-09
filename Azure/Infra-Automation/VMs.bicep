@@ -97,23 +97,6 @@ resource publicIp 'Microsoft.Network/publicIPAddresses@2022-05-01' = {
 resource networkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2022-05-01' = {
   name: networkSecurityGroupName
   location: location
-  properties: {
-    securityRules: [
-      {
-        name: 'Allow-RDP-Inbound'
-        properties: {
-          priority: 1000
-          access: 'Allow'
-          direction: 'Inbound'
-          destinationPortRange: '3389'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          sourceAddressPrefix: '*'
-          destinationAddressPrefix: '*'
-        }
-      }
-    ]
-  }
 }
 
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-05-01' = {
@@ -133,6 +116,12 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2022-05-01' = {
           networkSecurityGroup: {
             id: networkSecurityGroup.id
           }
+        }
+      }
+      {
+        name: 'AzureBastionSubnet' 
+        properties: {
+          addressPrefix: '10.1.1.0/26' 
         }
       }
     ]
