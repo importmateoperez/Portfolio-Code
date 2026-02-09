@@ -24,7 +24,7 @@ param OSVersion string = '2022-datacenter-azure-edition'
   'Standard_B2pts_v2'
   'Standard_B2ats_v2'
 ])
-param vmSize string = 'Standard_B1s'
+param vmSize string = 'Standard_B2ats_v2'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
