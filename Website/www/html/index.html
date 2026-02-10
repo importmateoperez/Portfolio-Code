@@ -35,13 +35,11 @@
       object-fit: contain;
     }
 
-    @media (min-width: 992px) {
-      .carousel-item img {
-        max-height: 550px;
-        object-fit: cover;
-      }
+    @media (min-width: 768px) {
+    .navbar-brand img {
+      width: 55px !important;
     }
-
+  }
     img.img-fluid.rounded {
       max-height: 500px;
       width: auto;
@@ -59,12 +57,18 @@
 </head>
 
 <body>
-<nav class="navbar bg-dark border-body sticky-top" data-bs-theme="dark">
-  <div class="container-fluid">
+<nav class="navbar bg-dark border-bottom border-secondary sticky-top py-2" data-bs-theme="dark">
+  <div class="container-fluid px-3 px-md-5">
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="Media/mateo_logo.png" alt="Logo" class="img-fluid rounded me-2" style="max-width: 50px;">
-        <span class="my-custom-title text-white m-0 fs-6 fs-md-4 fs-lg-2">
-          Mateo Perez: Aspiring System Admin        </span>
+      <img src="Media/mateo_logo.png" alt="Logo" class="img-fluid rounded me-3" 
+           style="width: 40px; height: auto;">
+      
+      <div class="d-flex flex-column">
+        <span class="text-white m-0 fw-bold fs-5 lh-1">Mateo Perez</span>
+        <span class="text-white m-0 fs-6 fw-light" style="font-family: 'Roboto Mono', monospace;">
+            Aspiring Cloud/Systems Administrator
+        </span>
+      </div>
     </a>
   </div>
 </nav>
