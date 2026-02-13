@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # 1. Configuration
-SOURCE_DIRS="/opt/web-cluster /var/www/html /etc/letsencrypt"
+SOURCE_DIRS="/src/to-file /src/to/file /src/tofile"
 BACKUP_DIR="/backups"
 DATE=$(date +"%Y-%m-%d")
 BACKUP_FILE="$BACKUP_DIR/web-cluster_$DATE.tar.gz"
 LOGFILE="/var/log/backup.log"
-EMAIL="mateoperez1080p@gmail.com"
+EMAIL="example@gmail.com"
 
 # 2. Preparation
 mkdir -p "$BACKUP_DIR"
