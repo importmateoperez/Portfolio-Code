@@ -1,13 +1,17 @@
 Overview
+
 This repository serves as the Source of Truth for my hybrid-cloud environment. It contains the Infrastructure as Code (IaC), configuration management, and automation scripts used to maintain a high-availability homelab and Azure footprint.
 
 The Mission
+
 To demonstrate enterprise-grade systems administration by treating my home network as a production environment—prioritizing security (VLAN segmentation), automation (Bash/Terraform), and remote accessibility (Tailscale).
 
 Architecture Design
+
 My lab is built on a multi-tier network architecture managed by a custom OPNsense firewall.
 
 Hardware Inventory
+
 Edge Router: Dell Optiplex (OPNsense)
 
 Managed Switching: TP Link managed switch utilizing VLAN segmentation
