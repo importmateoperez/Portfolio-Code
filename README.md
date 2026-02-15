@@ -1,56 +1,53 @@
-Overview
+# 🌐 Hybrid-Cloud Infrastructure & Homelab Operations
 
-This repository serves as the Source of Truth for my hybrid-cloud environment. It contains the Infrastructure as Code (IaC), configuration management, and automation scripts used to maintain a high-availability homelab and Azure footprint.
+## 📌 Overview
+This repository serves as the **Source of Truth** for my hybrid-cloud environment. It contains the Infrastructure as Code (IaC), configuration management, and automation scripts used to maintain a high-availability homelab and Azure footprint.
 
-The Mission
+### 🎯 The Mission
+To demonstrate enterprise-grade systems administration by treating my home network as a production environment—prioritizing **security** (VLAN segmentation), **automation** (Bash/Terraform), and **secure remote accessibility** (Tailscale).
 
-To demonstrate enterprise-grade systems administration by treating my home network as a production environment—prioritizing security (VLAN segmentation), automation (Bash/Terraform), and remote accessibility (Tailscale).
+---
 
-Architecture Design
+## 🏗️ Architecture Design
+My lab is built on a multi-tier network architecture managed by a custom **OPNsense** firewall.
 
-My lab is built on a multi-tier network architecture managed by a custom OPNsense firewall.
 
-Hardware Inventory
 
-Edge Router: Dell Optiplex (OPNsense)
+### 🖥️ Hardware Inventory
+* **Edge Router:** Dell Optiplex (OPNsense)
+* **Managed Switching:** TP-Link managed switch utilizing 802.1Q VLAN segmentation.
+* **Virtualization:** Proxmox VE (Windows Server 2022 AD DS & Windows 11).
+* **Container Ops:** * **Fedora 42 (Podman)** on Dell Inspiron 2015 – Hosting Nextcloud (Prod/Dev).
+    * **Debian (Docker)** on Samsung 2012 – Hosting Apache2 Web Server (Prod/Dev).
 
-Managed Switching: TP Link managed switch utilizing VLAN segmentation
+---
 
-Virtualization: Proxmox VE (Windows Server 2022 AD DS & Win11)
+## 🚀 Key Projects & Implementations
 
-Container Ops: Fedora 42 (Podman) on Dell Inspiron 2015 - Nextcloud server Prod/Dev
-  Debian (Docker) on Samsung 2012 - Apache2 web server hosting Prod/Dev
+### 1. Secure and Encrypted Connectivity (Tailscale)
+Implemented a **Zero-Trust Mesh VPN** using Tailscale to allow secure, encrypted access to the Proxmox and OPNsense GUIs from any location without exposing management ports to the public internet.
 
-Key Projects & Implementations
-1. Secure and Encrypted Connectivity with Tailscale
-  I implemented a Zero-Trust Mesh VPN using Tailscale to allow secure, encrypted access to the Proxmox and OPNsense GUIs from anywhere in the world without exposing ports to the public internet.
+### 2. Linux Containerization (Podman vs. Docker)
+Managed and hardened a dual-container environment. I specifically opted for **Podman** on Fedora for Nextcloud instances to leverage **rootless containers**, significantly enhancing the security posture of personal data.
 
-2. Linux Containerization (Podman vs. Docker)
-  I managed, hardened, and implemented a dual-container environment. I specifically chose Podman on Fedora for my Nextcloud instances to leverage rootless containers, enhancing the security posture of my personal data.
+### 3. Windows Server 2022 & Proxmox VE
+Deployed and configured **Windows Server 2022** as an Active Directory Domain Controller (AD DS). Managed Group Policy Objects (GPOs), user permissions, and secure Windows 11 client integration within a virtualized Proxmox environment.
 
-3. Windows Server 2022 Proxmox VE
-  I deployed and configured Windows Server 2022 as an Active Directory Domain Controller (AD DS). Managed Group Policy Objects (GPOs), user permissions, and secure Windows 11 client integration.
+### 4. OPNsense Firewall Configuration
+Engineered a dedicated OPNsense firewall on Dell hardware to serve as the primary gateway. Implemented **L3/L4 firewall rules** to harden the network and prevent unauthorized lateral movement between VLANs.
 
-4. OPNsense Firewall Configuration
-  I engineered a dedicated OPNsense firewall on Dell hardware to serve as the primary gateway, implementing L3/L4 firewall rules to harden the network against external threats.
+### 5. Azure Cloud Administration
+Utilized **Bicep and Terraform** for rapid prototyping of Azure environments to deploy secure, scalable resources. Performed core Azure administration tasks, including cost management, performance monitoring, and availability tracking.
 
-5. Azure Cloud Administration
-  I Used Bicep and Terraform for rapid prototyping of Azure environments in order to understand and create secure resources. I also performed Azure admin tasks such as monitoring resource costs, performance, and availability.
+---
 
-Skills Demonstrated
+## 🛠️ Skills Demonstrated
 
-Disaster Recovery: Engineered Bash-based backup pipelines for PostgreSQL/MariaDB databases and container volumes across Fedora and Debian nodes. Disk wide backups images also made for entire system recovery
-
-Automated Reporting: Developed a custom telemetry system using Bash and SMTP to deliver daily health reports, backup status (Success/Failure), and storage metrics directly to my inbox
-
-Windows Server 2022 Administration: Active Directory (AD DS) management, Group Policy Objects (GPO), and Windows 11 client provisioning
-
-Linux Administration: OS installation/patching, kernel hardening, and package management across Fedora (DNF) and Debian (APT) distributions
-
-Virtualization: Proxmox VE management, VM resource allocation, and snapshot-based backup strategies
-
-Networking: VLAN Tagging, Firewall Rules (L3/L4), VPN Mesh, Dynamic DNS
-
-Security: Identity Management (AD), Rootless Containers, SSH Key Auth
-
-DevOps: Git, CI/CD mindset, Infrastructure as Code
+* **Disaster Recovery:** Engineered Bash-based backup pipelines for PostgreSQL/MariaDB databases and container volumes. Implemented full-disk system imaging to ensure rapid recovery in the event of hardware failure.
+* **Automated Reporting:** Developed a custom telemetry system using **Bash and SMTP** to deliver daily health reports, backup status (Success/Failure), and storage metrics directly to my inbox.
+* **Windows Server 2022 Administration:** Expert management of Active Directory (AD DS), Group Policy Objects (GPOs), and Windows 11 client provisioning.
+* **Linux Administration:** Full lifecycle management including OS installation, patching, kernel hardening, and package management across **Fedora (DNF)** and **Debian (APT)**.
+* **Virtualization:** Proxmox VE administration, including VM resource allocation and snapshot-based backup strategies.
+* **Networking:** VLAN Tagging, L3/L4 Firewall Rules, Mesh VPN, and Dynamic DNS (DDNS).
+* **Security:** Identity Management (AD), Rootless Containers, and SSH Key Authentication.
+* **DevOps:** Version control via Git, CI/CD methodology, and Infrastructure as Code (IaC).
