@@ -1,30 +1,59 @@
 #!/bin/bash
+# Description: Full file-level backup for a web cluster (Configs, SSL, and Web Root)
 
-# 1. Configuration
-SOURCE_DIRS="/src/to-file /src/to/file /src/tofile"
-BACKUP_DIR="/backups"
+# Configuration
+# Directories to include in the backup
+SOURCE_DIRS="/path/to/web/html /path/to/configs /etc/letsencrypt"
+BACKUP_DIR="/path/to/your/backups"
 DATE=$(date +"%Y-%m-%d")
 BACKUP_FILE="$BACKUP_DIR/web-cluster_$DATE.tar.gz"
-LOGFILE="/var/log/backup.log"
-EMAIL="example@gmail.com"
+LOGFILE="/var/log/backup_web.log"
+EMAIL="your-email@example.com"
 
-# 2. Preparation
+# Preparation
 mkdir -p "$BACKUP_DIR"
+echo "--- Web Backup Started: $DATE ---" >> "$LOGFILE"
 
-# 3. Create Backup
-# -p preserves permissions, -z is compression
-tar -cpzf "$BACKUP_FILE" $SOURCE_DIRS > /dev/null 2>&1
+# Create Compressed Archive
+ERROR_LOG=$(mktemp)
+tar -cpzf "$BACKUP_FILE" $SOURCE_DIRS > /dev/null 2> "$ERROR_LOG"
 
-# 4. Check Result & Notify
+# Check Result & Log Messages
 if [ $? -eq 0 ]; then
+    STATUS="✅ SUCCESS"
     SIZE=$(du -sh "$BACKUP_FILE" | awk '{print $1}')
-    MESSAGE="✅ SUCCESS: Backup created at $BACKUP_FILE (Size: $SIZE)"
-    # Cleanup: Keep only last 7 days of backups
+    MESSAGE="Full backup of web files, configs, and SSL certs completed."
+    
+    # Retention Policy: Remove backups older than 7 days
     find "$BACKUP_DIR" -type f -name "*.tar.gz" -mtime +7 -delete
 else
-    MESSAGE="❌ FAILED: The backup for $DATE did not complete successfully!"
+    STATUS="❌ FAILED"
+    SIZE="0MB"
+    MESSAGE="Tar encountered an error. Details: $(cat $ERROR_LOG)"
 fi
 
-# 5. Log and Email
-echo "[$DATE] $MESSAGE" >> "$LOGFILE"
-echo "$MESSAGE" | mail -s "Web-Cluster Backup Status ($DATE)" "$EMAIL"
+rm -f "$ERROR_LOG"
+
+# Storage Stats
+TOTAL_STORAGE=$(du -sh "$BACKUP_DIR" | awk '{print $1}')
+DISK_FREE=$(df -h "$BACKUP_DIR" | awk 'NR==2 {print $4}')
+
+# Build & Send Report
+read -r -d '' REPORT <<EOF
+WEB CLUSTER BACKUP REPORT
+----------------------------------------------
+Status:          $STATUS
+Date:            $DATE
+Archive Size:    $SIZE
+----------------------------------------------
+STORAGE SUMMARY:
+Total Backups:   $TOTAL_STORAGE
+Disk Space Left: $DISK_FREE
+----------------------------------------------
+DETAILS:
+$MESSAGE
+----------------------------------------------
+EOF
+
+echo "[$DATE] $STATUS - $SIZE" >> "$LOGFILE"
+echo "$REPORT" | mail -s "Web Backup Status: $STATUS ($DATE)" "$EMAIL"

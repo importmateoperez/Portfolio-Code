@@ -1,16 +1,18 @@
 #!/bin/bash
+# Description: Daily system health and security report for Fedora-based servers
 
-# Get Hostname
+# Configuration
+EMAIL="your-email@example.com"
 HOSTNAME=$(hostname)
 
-# Info Collection
+# System Metrics Collection
 UPTIME=$(uptime -p)
-DISK=$(df -h / | tail -1 | awk '{print $5 " used (" $3 "/" $2 ")"}')
+DISK=$(df -h / | awk 'NR==2 {print $5 " used (" $3 "/" $2 ")"}')
 MEMORY=$(free -h | awk '/Mem:/ {print $3 " used of " $2}')
 CPU=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8"% idle"}')
 
-# Podman Container Status Section
-CONTAINERS=("nextcloud-app-prod" "nextcloud-app-dev")
+# Podman Container Status
+CONTAINERS=("app-container-1" "app-container-2")
 CONTAINER_REPORT=""
 
 for CT in "${CONTAINERS[@]}"; do
@@ -25,22 +27,20 @@ for CT in "${CONTAINERS[@]}"; do
     fi
 done
 
-# Fedora Security Updates Section
-SEC_UPDATES=$(dnf updateinfo list security --installed 2>/dev/null | grep -i "security" | wc -l)
+# Security & Update Status
+SEC_UPDATES=$(dnf updateinfo list security --available 2>/dev/null | grep -i "security" | wc -l)
+REG_UPDATES=$(dnf check-update --quiet 2>/dev/null | grep -v "^$" | wc -l)
 
-# Total updates (excluding security) for context
-REG_UPDATES=$(dnf check-update --quiet | grep -v "^$" | wc -l)
-
-# Build Report
-REPORT="
+# Build Final Report
+read -r -d '' REPORT <<EOF
 ----------------------------------------------
-DAILY STATUS REPORT: $HOSTNAME
+FEDORA SYSTEM STATUS: $HOSTNAME
 Date: $(date)
 ----------------------------------------------
 
-Uptime: $UPTIME
-CPU Load: $CPU
-Disk Usage: $DISK
+Uptime:       $UPTIME
+CPU Load:     $CPU
+Disk Usage:   $DISK
 Memory Usage: $MEMORY
 
 [Container Status (Podman)]
@@ -48,10 +48,8 @@ $(echo -e "$CONTAINER_REPORT")
 
 [System Vulnerabilities]
 Critical Security Patches: $SEC_UPDATES
-Other Software Updates: $REG_UPDATES
+Other Software Updates:    $REG_UPDATES
+----------------------------------------------
+EOF
 
-Note: Use 'sudo dnf upgrade --security' to apply only critical patches.
-"
-
-# Send Email
-echo "$REPORT" | mail -s "Daily Report - $HOSTNAME" example@gmail.com
+echo "$REPORT" | mail -s "Daily Status Report: $HOSTNAME" "$EMAIL"
