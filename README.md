@@ -17,6 +17,7 @@ My lab is built on a multi-tier network architecture managed by a custom **OPNse
 * **Edge Router:** Dell Optiplex (OPNsense)
 * **Managed Switching:** TP-Link managed switch utilizing 802.1Q VLAN segmentation.
 * **Virtualization:** Proxmox VE (Windows Server 2022 AD DS & Windows 11).
+* **SIEM:** Thinkpad L13 running Wazuh SIEM.
 * **Container Ops:** * **Fedora 42 (Podman)** on Dell Inspiron 2015 – Hosting Nextcloud (Prod/Dev).
     * **Debian (Docker)** on Samsung 2012 – Hosting Apache2 Web Server (Prod/Dev).
 
@@ -39,6 +40,10 @@ Engineered a dedicated OPNsense firewall on Dell hardware to serve as the primar
 ### 5. Azure Cloud Administration
 Utilized **Bicep and Terraform** for rapid prototyping of Azure environments to deploy secure, scalable resources. Performed core Azure administration tasks, including cost management, performance monitoring, and availability tracking.
 
+### 6. Security Monitoring
+Architected and deployed Wazuh SIEM to centralize log management and automate real-time threat detection across distributed environments.
+
+
 ---
 
 ## 🛠️ Skills Demonstrated
@@ -51,3 +56,4 @@ Utilized **Bicep and Terraform** for rapid prototyping of Azure environments to 
 * **Networking:** VLAN Tagging, L3/L4 Firewall Rules, Mesh VPN, and Dynamic DNS (DDNS).
 * **Security:** Identity Management (AD), Rootless Containers, and SSH Key Authentication.
 * **DevOps:** Version control via Git, CI/CD methodology, and Infrastructure as Code (IaC).
+* **Security Monitoring:** Live threat detection, log monitoring, compliance.
