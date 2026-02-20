@@ -10,6 +10,34 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap" rel="stylesheet">
 
   <style>
+
+@media (max-width: 768px) {
+  .my-custom-paragraph {
+    font-size: 1rem; 
+    padding: 0 10px;
+  }
+  
+  .carousel-item img {
+    max-height: 400px; 
+  }
+}
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .custom-nav-subtitle {
+  font-size: 0.75rem; 
+  line-height: 1.2;
+  white-space: normal; 
+  max-width: 180px;    
+}
+
+  .row {
+    margin-right: 0;
+    margin-left: 0;
+  }
     body {
       font-family: 'Open Sans', sans-serif;
     }
@@ -46,6 +74,14 @@
       object-fit: contain;
     }
 
+    @media (min-width: 768px) {
+  .custom-nav-subtitle {
+    font-size: 0.9rem;
+    max-width: none;   /* Lets it stay on one line on bigger screens */
+    white-space: nowrap;
+  }
+}
+
     .carousel-control-prev-icon {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z'/%3e%3c/svg%3e");
     }
@@ -59,13 +95,13 @@
 <body>
 <nav class="navbar bg-dark border-bottom border-secondary sticky-top py-2" data-bs-theme="dark">
   <div class="container-fluid px-3 px-md-5">
-    <a class="navbar-brand d-flex align-items-center" href="#">
-      <img src="Media/mateo_logo.png" alt="Logo" class="img-fluid rounded me-3" 
+    <a class="navbar-brand d-flex align-items-center m-0" href="#">
+      <img src="Media/mateo_logo.png" alt="Logo" class="img-fluid rounded me-2 me-md-3" 
            style="width: 40px; height: auto;">
       
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column justify-content-center">
         <span class="text-white m-0 fw-bold fs-5 lh-1">Mateo Perez</span>
-        <span class="text-white m-0 fs-6 fw-light" style="font-family: 'Roboto Mono', monospace;">
+        <span class="text-white m-0 fw-light custom-nav-subtitle" style="font-family: 'Roboto Mono', monospace;">
             Aspiring Cloud/Systems Administrator
         </span>
       </div>
@@ -89,7 +125,7 @@
       worked and displayed my video games. I later went to community college where I earned my degree in computer programming in December of 2025. This gave me the foundational knowledge of 
       programming logic/languages, networking, databases, operating systems, and how computers work in general. I took the time on my own to learn more things like system/cloud administration, Infrastructure as Code, 
       and how to setup this website from scratch. I am eager to learn new things and really enjoy it. I made this entire website from scratch using only HTML, CSS, and Bootstrap.
-      To experiment with different things of course I also made my own homelab! My goal is to become a system/cloud administrator, cloud engineer, or devops engineer.
+      To experiment with different things of course I also made my own homelab! My goal is to become a system/cloud administrator, cloud engineer, or security administrator.
       </p>
     </div>
   </div>
@@ -176,7 +212,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent"><strong>Cloud Infrastructure:</strong> Microsoft Azure Administrator Associate (AZ-104) and Azure Cloud Fundamentals (AZ-900).</li>
                     <li class="list-group-item bg-transparent"><strong>Cybersecurity:</strong> CompTIA Security+, Cisco Junior Cybersecurity Analyst, and Cisco Ethical Hacker.</li>
-                    <li class="list-group-item bg-transparent"><strong>Technical Mastery:</strong> Advanced proficiency in Infrastructure as Code (Terraform/Bicep), PowerShell/Bash scripting, and Linux Server administration.</li>
+                    <li class="list-group-item bg-transparent"><strong>Technical Mastery:</strong> Advanced proficiency in Infrastructure as Code (Terraform/Bicep?Anisble), PowerShell/Bash scripting, and Linux Server administration.</li>
                 </ul>
             </div>
         </div>
@@ -238,6 +274,7 @@
                     <li class="list-group-item bg-transparent"><strong>Technical Support:</strong> Managed over 1,000 devices, resolving complex technical Customer Service Requests via phone, email, and in-person support.</li>
                     <li class="list-group-item bg-transparent"><strong>Performance Maintenance:</strong> Performed onsite and remote diagnosis, repairs, and upgrades for Windows, Mac OS, and Chrome OS workstations.</li>
                     <li class="list-group-item bg-transparent"><strong>Asset Management:</strong> Documented all equipment activities in the Incident IQ ticket system and conducted research for future PC procurement.</li>
+                    <li class="list-group-item bg-transparent"><strong>Security Patching and Compliance:</strong> Orchestrated proactive updates and patching for critical security systems, ensuring 100% adherence to industry compliance standards and mitigating potential vulnerabilities .</li>
                 </ul>
             </div>
 
@@ -247,7 +284,7 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent"><strong>Help Desk Support:</strong> Resolved 25–50 tickets daily for the U.S. Coast Guard, achieving a 95% first-call resolution rate for hardware and network issues.</li>
                     <li class="list-group-item bg-transparent"><strong>Identity Management:</strong> Managed Active Directory accounts, including password resets, group memberships, and access permissions using BMC Remedy.</li>
-                    <li class="list-group-item bg-transparent"><strong>IoT Automation:</strong> Programmed and troubleshoot HVAC IoT controllers for industrial applications, creating custom logic and graphics.</li>
+                    <li class="list-group-item bg-transparent"><strong>Backup and Disaster Recovery:</strong> Maintained and validated backup policies for building automation systems, ensuring system configurations and logic could be rapidly restored in the event of hardware failure or data corruption.</li>
                     <li class="list-group-item bg-transparent"><strong>Network Configuration:</strong> Configured IP addressing, internet settings, and system databases for Trane IoT devices and buildings.</li>
                 </ul>
             </div>
@@ -277,7 +314,7 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img src="Media/homelab.jpg" class="rounded img-fluid d-block w-100" alt="homelab">
+          <img src="Media/final_homelab.jpg" class="rounded img-fluid d-block w-100" alt="homelab">
         </div>
         <div class="carousel-item">
           <img src="Media/bicep_deploymentps1.png" class="rounded img-fluid d-block w-100" alt="Bicep deployment">
@@ -326,9 +363,10 @@
                 <p>The foundation of my lab is a secure multi-node environment built on Proxmox VE, hosting a domain simulation with Debian/Fedora Linux and Windows Server 2022.</p>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item bg-transparent"><strong>Network Security:</strong> Architected a multi-zone network featuring an OPNsense Security Gateway to manage inter-VLAN routing and stateful packet inspection.</li>
+                    <li class="list-group-item bg-transparent"><strong>SIEM/IDS:</strong> Implemented a centralized Network Security Monitoring (NSM) solution to monitor cross-VLAN traffic by integrating Suricata with Wazuh (SIEM), enabling real-time alerting for signature-based threats and spoofed internal IP addresses.</li>
                     <li class="list-group-item bg-transparent"><strong>Zero-Trust Management:</strong> Implemented a Tailscale Mesh VPN using encrypted WireGuard tunnels for secure out-of-band management.</li>
-                    <li class="list-group-item bg-transparent"><strong>Automation:</strong> Developed custom Bash and PowerShell scripts to automate routine security patching, system state reporting, and administrative alerts via SMTP.</li>
-                    <li class="list-group-item bg-transparent"><strong>Containerization:</strong> Deployed containerized private cloud services using Nextcloud within a Podman environment to ensure process isolation.</li>
+                    <li class="list-group-item bg-transparent"><strong>Automation:</strong> Refactored custom Bash and PowerShell scripts into Anisble Playbooks to automate routine security patching, system state reporting, and administrative alerts via SMTP.</li>
+                    <li class="list-group-item bg-transparent"><strong>Containerization:</strong> Deployed containerized web server/cloud server using apache2/nextcloud, within a production Docker/Podman environment, including a prod/dev container system, ensuring process isolation, efficient patching, and efficient resource allocation for self-hosted infrastructure.</li>
                 </ul>
             </div>
 
