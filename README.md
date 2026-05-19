@@ -16,7 +16,7 @@ My lab is built on a multi-tier network architecture managed by a custom **OPNse
 ### 🖥️ Hardware Inventory
 * **Edge Router:** Dell Optiplex (OPNsense)
 * **Managed Switching:** TP-Link managed switch utilizing 802.1Q VLAN segmentation.
-* **Virtualization:** Proxmox VE (Windows Server 2022 AD DS & Windows 11).
+* **Virtualization:** Proxmox VE (Windows Server 2022 AD DS, Windows 11, & RHEL).
 * **SIEM:** Thinkpad L13 running Wazuh SIEM and Suricata.
 * **Container Ops:** * **Fedora 42 (Podman)** on Dell Inspiron 2015 – Hosting Nextcloud (Prod/Dev).
     * **Debian (Docker)** on Samsung 2012 – Hosting Apache2 Web Server (Prod/Dev).
@@ -31,8 +31,8 @@ Implemented a **Zero-Trust Mesh VPN** using Tailscale to allow secure, encrypted
 ### 2. Linux Containerization (Podman vs. Docker)
 Managed and hardened a dual-container environment. I specifically opted for **Podman** on Fedora for Nextcloud instances to leverage **rootless containers**, significantly enhancing the security posture of personal data.
 
-### 3. Windows Server 2022 & Proxmox VE
-Deployed and configured **Windows Server 2022** as an Active Directory Domain Controller (AD DS). Managed Group Policy Objects (GPOs), user permissions, and secure Windows 11 client integration within a virtualized Proxmox environment.
+### 3. Windows Server 2022, RHEL, & Proxmox VE
+Deployed and configured **Windows Server 2022** as an Active Directory Domain Controller (AD DS). Managed Group Policy Objects (GPOs), user permissions, and secure Windows 11 client integration within a virtualized Proxmox environment. Deployed and managed **RHEL 10** server to practice true enterprise linux system administration.
 
 ### 4. OPNsense Firewall Configuration
 Engineered a dedicated OPNsense firewall on Dell hardware to serve as the primary gateway. Implemented **L3/L4 firewall rules** to harden the network and prevent unauthorized lateral movement between VLANs.
@@ -51,7 +51,7 @@ Implemented a centralized **Network Security Monitoring (NSM)** solution to moni
 * **Disaster Recovery:** Engineered Bash-based backup pipelines for PostgreSQL/MariaDB databases and container volumes. Implemented full-disk system imaging to ensure rapid recovery in the event of hardware failure.
 * **Automated Reporting:** Developed a custom telemetry system using **Bash and SMTP** to deliver daily health reports, backup status (Success/Failure), and storage metrics directly to my inbox.
 * **Windows Server 2022 Administration:** Expert management of Active Directory (AD DS), Group Policy Objects (GPOs), and Windows 11 client provisioning.
-* **Linux Administration:** Full lifecycle management including OS installation, patching, kernel hardening, and package management across **Fedora (DNF)** and **Debian (APT)**.
+* **Linux Administration:** Full lifecycle management including OS installation, patching, kernel hardening, and package management across **Fedora (DNF)** & **Debian (APT)** & **RHEL (RPM)**.
 * **Virtualization:** Proxmox VE administration, including VM resource allocation and snapshot-based backup strategies.
 * **Networking:** VLAN Tagging, L3/L4 Firewall Rules, Mesh VPN, and Dynamic DNS (DDNS).
 * **Security:** Identity Management (AD), Rootless Containers, and SSH Key Authentication.
