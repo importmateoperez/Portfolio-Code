@@ -1,3 +1,12 @@
+Write-Host "Template:"
+Write-Host $templateFile
+
+Write-Host "Parameters:"
+Write-Host $parameterFile
+
+Test-Path $templateFile
+Test-Path $parameterFile
+
 # Variables
 $subscriptionId = "e9567da1-99bc-41c0-8e86-f168bd848ac8"
 $resourceGroup = "New_Test_Group"
