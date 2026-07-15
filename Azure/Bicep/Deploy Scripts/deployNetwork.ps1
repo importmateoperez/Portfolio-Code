@@ -4,15 +4,6 @@ $resourceGroup = "New_Test_Group"
 $templateFile = "../main.bicep"
 $parameterFile = "../Environments/Dev/dev.bicepparam"
 
-Write-Host "Template:"
-Write-Host $templateFile
-
-Write-Host "Parameters:"
-Write-Host $parameterFile
-
-Test-Path $templateFile
-Test-Path $parameterFile
-
 # Login
 az login
 
