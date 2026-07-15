@@ -1,4 +1,4 @@
-using '../../Modules/main.bicep'
+using '../../main.bicep'
 
 param vnetName = 'dev-net'
 
