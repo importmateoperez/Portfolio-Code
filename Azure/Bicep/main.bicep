@@ -7,7 +7,7 @@ param vnetName string
 @description('Address space')
 param addressPrefix string
 
-module network './Networks/networks.bicep' = {
+module network './Modules/Networks/networks.bicep' = {
   name: 'networkDeployment'
 
   params: {
