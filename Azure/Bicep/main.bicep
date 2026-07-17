@@ -7,6 +7,12 @@ param vnetName string
 @description('Address space')
 param addressPrefix string
 
+@description('Virtual network name')
+param subnetName string
+
+@description('Address space')
+param subnetPrefix string
+
 module network './Modules/Networks/networks.bicep' = {
   name: 'networkDeployment'
 
@@ -14,6 +20,8 @@ module network './Modules/Networks/networks.bicep' = {
     location: location
     vnetName: vnetName
     addressPrefix: addressPrefix
+    subnetName: subnetName
+    subnetPrefix: subnetPrefix
   }
 
 }

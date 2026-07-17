@@ -7,6 +7,12 @@ param addressPrefix string
 @description('Vnet location')
 param location string
 
+@description('Name of the subnet')
+param subnetName string   
+
+@description('Subnet address space')
+param subnetPrefix string
+
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-07-01' = {
   name: vnetName
   location: location
@@ -18,6 +24,16 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2025-07-01' = {
     
     }
   
+  subnets: [
+    {
+      name: subnetName
+
+      properties: {
+        addressPrefix: subnetPrefix
+      }
+    }
+  ]
+
   }
 
 }
