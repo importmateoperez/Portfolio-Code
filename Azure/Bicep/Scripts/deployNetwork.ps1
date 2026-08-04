@@ -2,8 +2,8 @@
 $subscriptionId = "e9567da1-99bc-41c0-8e86-f168bd848ac8"
 $resourceGroup = "New_Test_Group"
 $location = "westus2" 
-$templateFile = "/main.bicep"
-$parameterFile = "/Environments/Dev/dev.bicepparam"
+$templateFile = "$PSScriptRoot\..\main.bicep"
+$parameterFile = "$PSScriptRoot\..\Environments\Dev\dev.bicepparam"
 
 # Login
 az login
